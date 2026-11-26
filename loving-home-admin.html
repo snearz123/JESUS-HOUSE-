@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4A2C0A">
+<title>LOVING HOME FURNITURE | Admin Portal</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--navy:#172b4d;--brown:#4A2C0A;--gold:#FFB300;--cream:#F4F1EA;--green:#198754;--red:#c0392b;--ink:#20252b;--muted:#6c757d;--line:#e7e2d9;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f6f5f2;color:var(--ink);font-family:Inter,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:8px;padding:10px 14px;background:var(--brown);color:#fff;font-weight:650}button:hover{filter:brightness(1.12)}button:disabled{opacity:.5;cursor:not-allowed}.secondary{background:#e9e3d8;color:var(--brown)}.danger{background:var(--red)}.success{background:var(--green)}.small{padding:6px 9px;font-size:12px}.muted{color:var(--muted)}.hidden{display:none!important}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#2e1b08,#6c471d)}.login-card{width:min(430px,100%);background:#fff;border-radius:18px;padding:32px;box-shadow:0 20px 60px #0004}.brand-mark{width:54px;height:54px;border-radius:15px;background:var(--brown);color:var(--gold);display:grid;place-items:center;font-weight:900;font-size:22px;margin-bottom:18px}.login-card h1{font-size:23px;margin:0 0 6px;color:var(--brown)}.login-card p{margin:0 0 22px;color:var(--muted)}label{display:block;font-size:13px;font-weight:700;margin:13px 0 6px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d9d5ce;border-radius:8px;background:#fff;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #ffb30022}.login-card button{width:100%;margin-top:18px;padding:12px}.error{color:var(--red);font-size:13px;margin-top:12px;min-height:18px}
+.app{min-height:100vh}.topbar{height:68px;background:var(--brown);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:5;box-shadow:0 3px 12px #0002}.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.3px}.brand b{color:var(--gold)}.top-actions{display:flex;align-items:center;gap:12px}.top-actions span{font-size:13px}.top-actions button{background:#ffffff20;border:1px solid #ffffff40}.layout{display:grid;grid-template-columns:245px 1fr;min-height:calc(100vh - 68px)}aside{background:#fff;border-right:1px solid var(--line);padding:20px 14px}.nav-label{text-transform:uppercase;font-size:10px;letter-spacing:1.2px;color:#999;font-weight:800;padding:10px 12px}.nav-btn{width:100%;text-align:left;background:transparent;color:#51483e;padding:12px;border-radius:9px;margin:2px 0;font-weight:650}.nav-btn.active,.nav-btn:hover{background:#f4eee5;color:var(--brown)}main{padding:28px;min-width:0}.page-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.page-head h1{font-size:25px;margin:0;color:var(--brown)}.page-head p{margin:5px 0 0;color:var(--muted);font-size:13px}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px}.stat .k{font-size:12px;color:var(--muted);font-weight:700}.stat .v{font-size:28px;font-weight:850;color:var(--brown);margin-top:8px}.panel{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px;margin-bottom:18px;min-width:0}.panel h2{font-size:16px;margin:0 0 14px;color:var(--brown)}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar input{max-width:300px}.toolbar select{max-width:190px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #eee;font-size:13px;vertical-align:top}th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#81796f;background:#faf9f7}td{max-width:280px;overflow-wrap:anywhere}.pill{display:inline-block;border-radius:30px;padding:4px 9px;font-size:11px;font-weight:750;background:#eee;color:#555}.pill.approved,.pill.shortlisted,.pill.active{background:#e4f4e9;color:#16713a}.pill.rejected{background:#fae8e6;color:#a32b21}.pill.pending,.pill.submitted{background:#fff2d2;color:#805500}.actions{display:flex;gap:5px;flex-wrap:wrap}.empty{padding:35px;text-align:center;color:var(--muted)}.notice{padding:12px 14px;border-radius:9px;background:#fff4d7;color:#755100;font-size:13px;margin-bottom:16px}.success-note{background:#e8f5ec;color:#176b36}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.form-grid .full{grid-column:1/-1}.modal{position:fixed;inset:0;background:#0007;display:grid;place-items:center;padding:18px;z-index:10}.modal-card{background:#fff;border-radius:14px;padding:22px;width:min(600px,100%);max-height:90vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modal-head h2{margin:0;color:var(--brown)}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.detail{background:#faf9f7;padding:11px;border-radius:8px;overflow-wrap:anywhere}.detail strong{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}aside{display:flex;overflow:auto;padding:8px;border-right:0;border-bottom:1px solid var(--line);gap:5px}aside .nav-label{display:none}.nav-btn{white-space:nowrap;width:auto;margin:0;padding:10px}.nav-btn:before{content:""}main{padding:18px}}
+@media(max-width:560px){.topbar{padding:0 13px}.brand{font-size:12px}.top-actions span{display:none}main{padding:14px}.cards{gap:9px}.stat{padding:13px}.stat .v{font-size:23px}.page-head{align-items:flex-start;flex-direction:column}.form-grid,.detail-grid{grid-template-columns:1fr}.panel{padding:13px}}
+</style>
+</head>
+<body>
+<section id="loginScreen" class="login-wrap">
+ <div class="login-card">
+  <div class="brand-mark">LH</div>
+  <h1>LOVING HOME FURNITURE</h1><p>Administrator sign in</p>
+  <form id="loginForm">
+   <label for="email">Email address</label><input id="email" type="email" autocomplete="username" required placeholder="admin@yourcompany.com">
+   <label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required placeholder="Enter your password">
+   <button id="loginBtn" type="submit">Sign in to Admin</button>
+   <div id="loginError" class="error" role="alert"></div>
+  </form>
+  <p class="muted" style="font-size:11px;margin:18px 0 0">Access is restricted to accounts assigned an administrator or HR role.</p>
+ </div>
+</section>
+<div id="app" class="app hidden">
+ <header class="topbar"><div class="brand"><span class="brand-mark" style="width:36px;height:36px;margin:0;border-radius:9px;font-size:16px">LH</span><span>LOVING HOME <b>ADMIN</b></span></div><div class="top-actions"><span id="adminEmail"></span><button id="logoutBtn">Sign out</button></div></header>
+ <div class="layout">
+  <aside>
+   <div class="nav-label">Workspace</div>
+   <button class="nav-btn active" data-page="dashboard">▦ Dashboard</button>
+   <button class="nav-btn" data-page="applications">♙ Applications</button>
+   <button class="nav-btn" data-page="jobs">▤ Jobs</button>
+   <button class="nav-btn" data-page="departments">▥ Departments</button>
+   <button class="nav-btn" data-page="interviews">◷ Interviews</button>
+   <button class="nav-btn" data-page="letters">✉ Employment letters</button>
+   <button class="nav-btn" data-page="benefits">✚ Benefits</button>
+   <button class="nav-btn" data-page="users">♧ Users</button>
+   <button class="nav-btn" data-page="notifications">♢ Notifications</button>
+  </aside>
+  <main><div id="pageContent"><div class="empty">Loading admin dashboard…</div></div></main>
+ </div>
+</div>
+<div id="modal" class="modal hidden"><div class="modal-card"><div class="modal-head"><h2 id="modalTitle">Details</h2><button class="secondary small" id="closeModal">Close</button></div><div id="modalBody"></div></div></div>
+<script>
+/* ================= CONFIGURATION =================
+   1. Paste your Supabase project URL and anon/public key below.
+   2. Match the table names and role column to your Supabase database.
+   3. Never put a service_role/secret key in this HTML file.
+*/
+const CONFIG = {
+  SUPABASE_URL: "https://YOUR-PROJECT.supabase.co",
+  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_PUBLIC_KEY",
+  profileTable: "user",          // Change to "profiles" if that is your actual table
+  profileIdColumn: "id",         // Must match the Supabase Auth user's UUID
+  roleColumn: "role",
+  adminRoles: ["admin","super_admin","hr_manager","employer"],
+  tables: {
+    applications: "applications",
+    jobs: "jobs",
+    departments: "department",
+    interviews: "interviews",
+    letters: "employment letter",
+    benefits: "benefits",
+    users: "user",
+    notifications: "notification"
+  },
+  // Optional: change status column if your applications table uses another name.
+  applicationStatusColumn: "status"
+};
+let supabaseClient, currentUser, currentProfile, activePage="dashboard", cache={};
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pretty = key => String(key).replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+const safeDate = v => {if(!v)return "—";const d=new Date(v);return isNaN(d)?"—":d.toLocaleDateString()};
+function tableName(key){return CONFIG.tables[key]}
+function isConfigured(){return !CONFIG.SUPABASE_URL.includes("YOUR-PROJECT") && !CONFIG.SUPABASE_ANON_KEY.includes("YOUR_SUPABASE")}
+function toast(msg){alert(msg)}
+function statusPill(v){let s=String(v??"unknown").toLowerCase().replace(/\s/g,"_");return `<span class="pill ${esc(s)}">${esc(v??"Unknown")}</span>`}
+async function fetchRows(key,limit=500){
+ const {data,error}=await supabaseClient.from(tableName(key)).select("*").limit(limit);
+ if(error) throw error; cache[key]=data||[]; return cache[key];
+}
+async function getProfile(user){
+ const {data,error}=await supabaseClient.from(CONFIG.profileTable).select("*").eq(CONFIG.profileIdColumn,user.id).maybeSingle();
+ if(error) throw new Error("Could not verify your admin role. Check CONFIG.profileTable, profileIdColumn and RLS. "+error.message);
+ return data;
+}
+function showLogin(message=""){ $("loginScreen").classList.remove("hidden");$("app").classList.add("hidden");$("loginError").textContent=message; }
+async function enterApp(user){
+ currentUser=user;
+ try{
+  currentProfile=await getProfile(user);
+  const role=String(currentProfile?.[CONFIG.roleColumn]||"").toLowerCase();
+  if(!CONFIG.adminRoles.includes(role)){await supabaseClient.auth.signOut();currentUser=null;showLogin("This account does not have an authorized admin/HR role.");return;}
+  $("adminEmail").textContent=user.email||"Administrator";
+  $("loginScreen").classList.add("hidden");$("app").classList.remove("hidden");
+  await renderPage("dashboard");
+ }catch(e){console.error(e);await supabaseClient.auth.signOut();currentUser=null;showLogin(e.message||"Unable to verify administrator access.");}
+}
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();$("loginBtn").disabled=true;$("loginBtn").textContent="Signing in…";$("loginError").textContent="";
+ try{const {data,error}=await supabaseClient.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;await enterApp(data.user);}
+ catch(err){$("loginError").textContent=err.message||"Sign in failed.";}
+ finally{$("loginBtn").disabled=false;$("loginBtn").textContent="Sign in to Admin";}
+});
+$("logoutBtn").onclick=async()=>{await supabaseClient.auth.signOut();currentUser=null;showLogin();};
+$("closeModal").onclick=()=>$("modal").classList.add("hidden");
+document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderPage(btn.dataset.page)}));
+async function renderPage(page){
+ activePage=page;const titles={dashboard:"Admin Dashboard",applications:"Applicant Management",jobs:"Job Management",departments:"Departments",interviews:"Interviews",letters:"Employment Letters",benefits:"Benefits",users:"User Management",notifications:"Notifications"};
+ $("pageContent").innerHTML=`<div class="page-head"><div><h1>${titles[page]}</h1><p>LOVING HOME FURNITURE · Recruitment administration</p></div><button class="secondary" onclick="refreshPage()">↻ Refresh</button></div><div class="empty">Loading data…</div>`;
+ try{
+  if(page==="dashboard") await dashboard();
+  else await dataPage(page);
+ }catch(e){console.error(e);$("pageContent").innerHTML+=`<div class="notice">Unable to load ${esc(page)}: ${esc(e.message)}. Check the table name, columns and Supabase RLS policies.</div>`;}
+}
+async function refreshPage(){await renderPage(activePage)}
+async function dashboard(){
+ const keys=["applications","jobs","departments","interviews","users"];
+ const results=await Promise.allSettled(keys.map(k=>fetchRows(k)));
+ const count=k=>results[keys.indexOf(k)].status==="fulfilled"?cache[k].length:"—";
+ let apps=cache.applications||[], jobs=cache.jobs||[], ints=cache.interviews||[];
+ const statusKey=CONFIG.applicationStatusColumn;
+ const pending=apps.filter(a=>String(a[statusKey]||"").toLowerCase()==="pending"||String(a[statusKey]||"").toLowerCase()==="submitted").length;
+ const recent=apps.slice(0,8);
+ $("pageContent").innerHTML=`
+ <div class="page-head"><div><h1>Admin Dashboard</h1><p>Overview of your recruitment operations</p></div><button class="secondary" onclick="refreshPage()">↻ Refresh</button></div>
+ <div class="cards">
+  <div class="stat"><div class="k">TOTAL APPLICATIONS</div><div class="v">${count("applications")}</div></div>
+  <div class="stat"><div class="k">OPEN JOB RECORDS</div><div class="v">${count("jobs")}</div></div>
+  <div class="stat"><div class="k">DEPARTMENTS</div><div class="v">${count("departments")}</div></div>
+  <div class="stat"><div class="k">INTERVIEWS</div><div class="v">${count("interviews")}</div></div>
+ </div>
+ <div class="cards">
+  <div class="stat"><div class="k">PENDING APPLICATIONS</div><div class="v">${pending}</div></div>
+  <div class="stat"><div class="k">REGISTERED USERS</div><div class="v">${count("users")}</div></div>
+  <div class="stat"><div class="k">SIGNED-IN ADMIN</div><div class="v" style="font-size:14px;overflow-wrap:anywhere">${esc(currentUser.email)}</div></div>
+  <div class="stat"><div class="k">ACCESS ROLE</div><div class="v" style="font-size:18px">${esc(currentProfile?.[CONFIG.roleColumn]||"Admin")}</div></div>
+ </div>
+ <section class="panel"><h2>Recent applications</h2>${renderTable(recent,"applications",true)}</section>
+ <div class="notice">Dashboard figures are read from your Supabase tables. If a card shows —, check that table's name and your administrator SELECT policy.</div>`;
+}
+function fieldsFor(row){return Object.keys(row||{}).filter(k=>!["password","password_hash","token","secret"].includes(k))}
+function renderTable(rows,key,compact=false){
+ if(!rows?.length)return `<div class="empty">No records found.</div>`;
+ let cols=fieldsFor(rows[0]).slice(0,compact?6:9);
+ return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${esc(pretty(c))}</th>`).join("")}<th>Actions</th></tr></thead><tbody>${rows.map((r,i)=>`<tr>${cols.map(c=>`<td>${c.toLowerCase().includes("status")?statusPill(r[c]):esc(typeof r[c]==="object"?JSON.stringify(r[c]):String(r[c]??"—").slice(0,140))}</td>`).join("")}<td><div class="actions"><button class="small secondary" onclick="viewRecord('${key}',${i})">View</button>${key==="applications"?`<button class="small success" onclick="setApplicationStatus(${i},'shortlisted')">Shortlist</button><button class="small danger" onclick="setApplicationStatus(${i},'rejected')">Reject</button>`:""}</div></td></tr>`).join("")}</tbody></table></div>`;
+}
+const pageToKey={applications:"applications",jobs:"jobs",departments:"departments",interviews:"interviews",letters:"letters",benefits:"benefits",users:"users",notifications:"notifications"};
+async function dataPage(page){
+ const key=pageToKey[page], rows=await fetchRows(key);
+ const canAdd=["jobs","departments","benefits","notifications"].includes(page);
+ $("pageContent").innerHTML=`
+ <div class="page-head"><div><h1>${({applications:"Applicant Management",jobs:"Job Management",departments:"Departments",interviews:"Interviews",letters:"Employment Letters",benefits:"Benefits",users:"User Management",notifications:"Notifications"})[page]}</h1><p>${rows.length} record(s) retrieved from Supabase</p></div>${canAdd?`<button onclick="openAddForm('${key}')">＋ Add new</button>`:""}</div>
+ <section class="panel"><div class="toolbar"><input id="tableSearch" placeholder="Search records…" oninput="filterTable('${key}')"><select id="statusFilter" onchange="filterTable('${key}')"><option value="">All statuses</option>${[...new Set(rows.map(r=>r.status).filter(Boolean))].map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("")}</select><button class="secondary" onclick="exportCSV('${key}')">Export CSV</button></div><div id="tableArea">${renderTable(rows,key)}</div></section>`;
+}
+window.filterTable=function(key){
+ const q=($("tableSearch")?.value||"").toLowerCase(),st=$("statusFilter")?.value||"";
+ const rows=(cache[key]||[]).filter(r=>JSON.stringify(r).toLowerCase().includes(q)&&(!st||String(r.status)===st));
+ $("tableArea").innerHTML=renderTable(rows,key);
+};
+window.viewRecord=function(key,index){
+ const row=(cache[key]||[])[index];if(!row)return;
+ $("modalTitle").textContent=pretty(key)+" details";
+ $("modalBody").innerHTML=`<div class="detail-grid">${fieldsFor(row).map(k=>`<div class="detail"><strong>${esc(pretty(k))}</strong>${esc(typeof row[k]==="object"?JSON.stringify(row[k],null,2):row[k]??"—")}</div>`).join("")}</div>`;
+ $("modal").classList.remove("hidden");
+};
+window.setApplicationStatus=async function(index,status){
+ const row=cache.applications?.[index];if(!row)return;
+ const id=row.id;if(!id){toast("This application record has no id column.");return;}
+ if(!confirm(`Change this application status to "${status}"?`))return;
+ try{const {error}=await supabaseClient.from(tableName("applications")).update({[CONFIG.applicationStatusColumn]:status}).eq("id",id);if(error)throw error;toast("Application updated.");await renderPage("applications");}
+ catch(e){toast("Update failed: "+e.message);}
+};
+window.exportCSV=function(key){
+ const rows=cache[key]||[];if(!rows.length){toast("There are no records to export.");return;}
+ const cols=fieldsFor(rows[0]);const csv=[cols.map(csvCell).join(","),...rows.map(r=>cols.map(c=>csvCell(r[c])).join(","))].join("\r\n");
+ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=`loving-home-${key}-${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(url);
+};
+function csvCell(v){let s=typeof v==="object"&&v!==null?JSON.stringify(v):String(v??"");return '"'+s.replace(/"/g,'""')+'"'}
+window.openAddForm=function(key){
+ const schemas={
+ jobs:[["title","Job title"],["description","Description"],["department_id","Department ID"],["location","Location"],["status","Status"]],
+ departments:[["name","Department name"],["description","Description"]],
+ benefits:[["name","Benefit name"],["description","Description"]],
+ notifications:[["title","Title"],["message","Message"],["user_id","User ID (optional)"]]
+ };
+ const fields=schemas[key]||[];
+ $("modalTitle").textContent="Add "+pretty(key);
+ $("modalBody").innerHTML=`<form id="addForm" class="form-grid">${fields.map(([n,l])=>`<div class="${n==="description"||n==="message"?"full":""}"><label>${esc(l)}</label>${n==="description"||n==="message"?`<textarea name="${esc(n)}" rows="3"></textarea>`:`<input name="${esc(n)}" ${n==="title"||n==="name"?"required":""}>`}</div>`).join("")}<div class="full"><button type="submit">Save record</button></div></form>`;
+ $("modal").classList.remove("hidden");
+ $("addForm").onsubmit=async e=>{e.preventDefault();const payload=Object.fromEntries(new FormData(e.target).entries());Object.keys(payload).forEach(k=>{if(payload[k]==="")delete payload[k]});try{const {error}=await supabaseClient.from(tableName(key)).insert(payload);if(error)throw error;$("modal").classList.add("hidden");toast("Record saved.");await renderPage(activePage);}catch(err){toast("Save failed: "+err.message);}};
+};
+if(!isConfigured()){
+ showLogin("Setup required: edit SUPABASE_URL and SUPABASE_ANON_KEY in the CONFIG section of this HTML file.");
+}else{
+ supabaseClient=window.supabase.createClient(CONFIG.SUPABASE_URL,CONFIG.SUPABASE_ANON_KEY);
+ supabaseClient.auth.getSession().then(({data})=>{if(data.session)enterApp(data.session.user);});
+ supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"){currentUser=null;showLogin();}});
+}
+</script>
+</body>
+</html>
